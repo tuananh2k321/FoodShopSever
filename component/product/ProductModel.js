@@ -8,6 +8,7 @@ const schema = new Schema({
     price: { type: Number},
     quantity: { type: Number},
     image: { type: String},
+    type: {type: String}
 });
 module.exports = mongoose.models.product || mongoose.model('product', schema);
 // category -----> categories

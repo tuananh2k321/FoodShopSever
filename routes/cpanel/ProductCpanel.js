@@ -31,9 +31,9 @@ router.post('/new', [upLoadImage.single('image'),],  async function(req, res, ne
             body = {...body, image: image}
         }
         // image = 'https://taimienphi.vn/tmp/cf/aut/anh-gai-xinh-1.jpg'
-        let {name, price, quantity, image} = body;
-        console.log('=>> ',name, price, quantity, image)
-        await productController.addNewProduct(name, price, quantity, image)
+        let {name, price, quantity, image, type} = body;
+        console.log('=>> ',name, price, quantity, image, type)
+        await productController.addNewProduct(name, price, quantity, image,type)
         return res.redirect('http://localhost:3000/product/cpanel/')
     } catch (error) {
         console.log(error)
@@ -85,8 +85,8 @@ router.post('/:id/edit', [upLoadImage.single('image'), ],  async function(req, r
         // image = 'https://taimienphi.vn/tmp/cf/aut/anh-gai-xinh-1.jpg'
 
         let {name, price, quantity, image} = body;
-        console.log('=>> ',name, price, quantity, image)
-        await productController.updateProduct(id, name, price, quantity, image)
+        console.log('=>> ',name, price, quantity, image, type)
+        await productController.updateProduct(id, name, price, quantity, image, type)
         return res.redirect('/product/cpanel')
     } catch (error) {
         console.log(error)

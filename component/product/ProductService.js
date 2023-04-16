@@ -9,6 +9,46 @@ const getAllProduct = async () => {
     return []
 }
 
+const getAllProductFruit = async () => {
+  try {
+      // return data;
+      return await productModel.find({type: 'fruit'})
+  } catch (error) {
+      console.log('get all product error: ',error)
+  }
+  return []
+}
+
+const getAllProductMeat = async () => {
+  try {
+      // return data;
+      return await productModel.find({type: 'meat'})
+  } catch (error) {
+      console.log('get all product error: ',error)
+  }
+  return []
+}
+
+const getAllProductFish = async () => {
+  try {
+      // return data;
+      return await productModel.find({type: 'fish'})
+  } catch (error) {
+      console.log('get all product error: ',error)
+  }
+  return []
+}
+
+const getAllProductVegetable = async () => {
+  try {
+      // return data;
+      return await productModel.find({type: 'vegetable'})
+  } catch (error) {
+      console.log('get all product error: ',error)
+  }
+  return []
+}
+
 const getAllProduct2 = async () => {
   try {
       // return data;
@@ -38,14 +78,14 @@ const deleteProduct = async (id) => {
     return []
 }
 
-const addNewProduct = async ( name, price, quantity, image, category) => {
+const addNewProduct = async ( name, price, quantity, image, type) => {
   try {
       const newProduct = {
         name,
         price,
         quantity,
         image,
-        category
+        type
       }
       // data.push(newProduct);
       await productModel.create(newProduct);
@@ -124,4 +164,6 @@ const search = async (keyword) => {
   }
 }
 
-module.exports = {getAllProduct, deleteProduct, addNewProduct, updateProduct, getProduct, search, getAllProduct2}
+module.exports = {getAllProduct, deleteProduct, addNewProduct, 
+            updateProduct, getProduct, search, getAllProduct2, getAllProductFruit, 
+            getAllProductMeat, getAllProductVegetable, getAllProductFish}
