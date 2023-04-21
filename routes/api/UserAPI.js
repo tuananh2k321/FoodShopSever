@@ -3,20 +3,22 @@ var router = express.Router();
 const jwt = require('jsonwebtoken');
 const userController = require('../../component/user/UserController')
 const { validationRegister } = require('../../MiddleWare/Validation')
-//api login user
-//http://localhost:3000/api/user/login
+const textflow = require("textflow.js")
+textflow.useKey("WHLTtWlbpEJkzXEUjNmZJGPgj4x8OxLfynndaKz7NDA6Yly04wUH96IbOEUoUmnm")
+
+//http://localhost:3000/user/api/login
 router.post('/login', async (req, res, next) => {
     try {
-        const { email, password } = req.body;
-        console.log(email, password)
-        const user = await userController.login(email, password);
-        console.log(user)
+        const { phoneNumber, password } = req.body;
+        console.log(phoneNumber, password)
+        const user = await userController.login(phoneNumber, password);
+        console.log("aaaaaaaaa", user)
         if (user) {
             const token = jwt.sign({ user }, 'secret', { expiresIn: '1h' })
-            return res.status(200).json({ result: true, user: user, token: token ,message: "Login Success"});
+            return res.status(200).json({ result: true, user: user, token: token, message: "Login Success" });
 
         } else {
-            return res.status(400).json({ result: false, user: null, token: null ,message: "Login Failed"});
+            return res.status(400).json({ result: false, user: null, token: null, message: "Login Failed" });
         }
     } catch (error) {
         console.log(error);
@@ -28,20 +30,108 @@ router.post('/login', async (req, res, next) => {
             .json({ result: false, message: 'Error System' })
     }
 })
-
-//api resgister 
-//http://localhost:3000/api/user/register
+//http://localhost:3000/user/api/register
 router.post('/register', [validationRegister], async (req, res, next) => {
     try {
-        const { email, password, name } = req.body;
-        const user = await userController.register(email, password, name);
+        const { phoneNumber, password, name, email, address, gender, dob, avatar, role, createAt, code } = req.body;
+
+
+        const user = await userController.register(phoneNumber, password, name, email, address, gender, dob, avatar, role, createAt);
         if (user) {
             return res.status(200).json({ result: true, user: user, message: "Register Success" });
         }
-        return res.status(400).json({ result: false, user: null,message: "Register Failed" });
+        return res.status(400).json({ result: false, user: null, message: "Register Failed" });
+
+
+        // let result =await textflow.verifyCode(phoneNumber, code)
+        // if (!result.valid) {
+        //     return res.status(400).json({ result: false, user: null, message: "Register Failed" });
+        // }else{
+        //     const user = await userController.register(phoneNumber, password, name);
+        //     if (user) {
+        //         return res.status(200).json({ result: true, user: user, message: "Register Success" });
+        //     }
+        //     return res.status(400).json({ result: false, user: null, message: "Register Failed" });
+        // }
+
     } catch (error) {
         return res.status(500).json({ result: false, user: null })
     }
 })
+//http://localhost:3000/user/api/verify-phone
+router.post('/verify-phone', [], async (req, res, next) => {
+    try {
+        const { phoneNumber } = req.body;
+        let result = await textflow.sendVerificationSMS(phoneNumber);
+        console.log("result", result)
+        if (result.ok) {
+            return res.status(200).json({ result: true, message: "verify Success" });
+        }
+        return res.status(400).json({ result: false, user: null, message: "verify Failed" });
+    } catch (error) {
+        return res.status(500).json({ result: false, user: null })
+    }
+})
+//http://localhost:3000/user/api/update
+router.put('/update', async (req, res, next) => {
 
+    try {
+        const { phoneNumber, password, name, email, address, gender, dob, avatar, role } = req.body;
+        console.log(phoneNumber, password, name, email, address, gender, dob, avatar, role);
+        const user = await userController.updateUser(phoneNumber, password, name, email, address, gender, dob, avatar, role);
+        console.log(user)
+        if (user) {
+            return res.status(200).json({ result: true, user: user, message: "Update Success" })
+        } else {
+            return res.status(400).json({ result: false, user: null, message: " user not exist" })
+        }
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ result: false, user: null })
+    }
+})
+//http://localhost:3000/user/api/list-user
+router.get('/list-user', async (req, res, next) => {
+    try {
+        const users = await userController.getAllUser();
+        console.log(users)
+        return res.status(200).json({ result: true, users: users });
+    } catch (error) {
+        console.log("List User:" + error)
+        return res.status(500).json({ result: false, massage: "Can't get list user" })
+    }
+})
+//http://localhost:3000/user/api/send-mail
+router.post('/send-mail', async (req, res, next) => {
+    try {
+        const { to, subject } = req.body;
+        let html = 'Congrat hahaahah';
+        await userController.sendMail(to, subject, html);
+        return res.status(200).json({ result: true });
+    } catch (error) {
+        console.log("MAIL:" + error)//API
+        return res.status(500).json({ result: false, massage: "Can't get list user" })//app
+    }
+})
+
+//http://localhost:3000/user/api/search
+router.get('/search', async (req, res, next) => {
+    try {
+
+        let {phoneNumber}= req.body;
+        console.log(phoneNumber)
+        const user = await userController.search(phoneNumber);
+        console.log(user);
+        if(user){
+            res.status(200).json({result:true,user:user,message:"Search Success"});
+        }else
+        {
+            res.status(400).json({result:false,user:null,message:"User not exist"});
+
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ result: false, massage: "Failed to search" })
+    }
+})
 module.exports = router;

@@ -1,33 +1,34 @@
 const UserService = require('./Userservice');
 const mailer = require('nodemailer')
 
-const login = async (email, password) => {
+const login = async (phoneNumber, password) => {
     try {
-        return await UserService.login(email, password);
+        console.log(phoneNumber, password);
+
+        return await UserService.login(phoneNumber, password);
+    } catch (error) {
+        return false;
+    }
+}
+const register = async (phoneNumber, password, name, email, address, gender, dob, avatar, role,createAt) => {
+    try {
+        return await UserService.register(phoneNumber, password, name, email, address, gender, dob, avatar, role,createAt);
 
     } catch (error) {
         return false;
     }
 }
-const register = async (email, password, name) => {
+const deleteUserByphoneNumber = async (phoneNumber) => {
     try {
-        return await UserService.register(email, password, name);
+        return await UserService.deleteUserByphoneNumber(phoneNumber);
 
     } catch (error) {
         return false;
     }
 }
-const deleteUserByEmail = async (email) => {
+const updateUser = async ( phoneNumber, password, name, email, address, gender, dob, avatar, role) => {
     try {
-        return await UserService.deleteUserByEmail(email);
-
-    } catch (error) {
-        return false;
-    }
-}
-const updateUser = async (email, password, name) => {
-    try {
-        return await UserService.updateUser(email, password, name);
+        return await UserService.updateUser( phoneNumber, password, name, email, address, gender, dob, avatar, role);
 
     } catch (error) {
         return false;
@@ -37,11 +38,18 @@ const getAllUser = async (page, size) => {
     try {
         return await UserService.getAllUser(page, size);
     } catch (error) {
-        console.log("Get list user Got an error: " + error);
         throw error;
     }
 }
+const search = async (phoneNumber)=>{
+    try {
+        return await UserService.search(phoneNumber);
+    } catch (error) {
+        throw error;
+    }
+}
+
 module.exports = {
-    login, register, deleteUserByEmail,
-    updateUser, getAllUser
+    login, register, deleteUserByphoneNumber,
+    updateUser, getAllUser,search
 };
