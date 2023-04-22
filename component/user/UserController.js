@@ -3,8 +3,6 @@ const mailer = require('nodemailer')
 
 const login = async (phoneNumber, password) => {
     try {
-        console.log(phoneNumber, password);
-
         return await UserService.login(phoneNumber, password);
     } catch (error) {
         return false;
@@ -18,9 +16,9 @@ const register = async (phoneNumber, password, name, email, address, gender, dob
         return false;
     }
 }
-const deleteUserByphoneNumber = async (phoneNumber) => {
+const deleteByPhoneNumber = async (phoneNumber) => {
     try {
-        return await UserService.deleteUserByphoneNumber(phoneNumber);
+        return await UserService.deleteByPhoneNumber(phoneNumber);
 
     } catch (error) {
         return false;
@@ -50,6 +48,6 @@ const search = async (phoneNumber)=>{
 }
 
 module.exports = {
-    login, register, deleteUserByphoneNumber,
+    login, register, deleteByPhoneNumber,
     updateUser, getAllUser,search
 };

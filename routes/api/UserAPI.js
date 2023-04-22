@@ -90,8 +90,8 @@ router.put('/update', async (req, res, next) => {
         return res.status(500).json({ result: false, user: null })
     }
 })
-//http://localhost:3000/user/api/list-user
-router.get('/list-user', async (req, res, next) => {
+//http://localhost:3000/user/api/list
+router.get('/list', async (req, res, next) => {
     try {
         const users = await userController.getAllUser();
         console.log(users)
@@ -118,20 +118,35 @@ router.post('/send-mail', async (req, res, next) => {
 router.get('/search', async (req, res, next) => {
     try {
 
-        let {phoneNumber}= req.body;
+        let { phoneNumber } = req.query;
         console.log(phoneNumber)
         const user = await userController.search(phoneNumber);
         console.log(user);
-        if(user){
-            res.status(200).json({result:true,user:user,message:"Search Success"});
-        }else
-        {
-            res.status(400).json({result:false,user:null,message:"User not exist"});
+        if (user) {
+            res.status(200).json({ result: true, user: user, message: "Search Success" });
+        } else {
+            res.status(400).json({ result: false, user: null, message: "User not exist" });
 
         }
     } catch (error) {
         console.log(error);
         res.status(500).json({ result: false, massage: "Failed to search" })
+    }
+})
+//http://localhost:3000/user/api/delete
+router.delete('/delete',async (req,res,next)=>{
+    try{
+
+        const {phoneNumber} = req.query;
+        const user = await userController.deleteByPhoneNumber(phoneNumber);
+        if(user){
+            res.status(200).json({result:true,message:"Delete Success"})
+        }else{
+            res.status(400).json({result:false,massage:"Delete Failed"})
+        }
+    }catch(error){
+        console.log(error)
+        res.status(500).json({result:false,massage:"Error System"})
     }
 })
 module.exports = router;

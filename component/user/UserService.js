@@ -5,10 +5,6 @@ const bcrypt = require('bcryptjs')
 const login = async (phoneNumber, password) => {
     try {
         const user = await UserModel.findOne({ phoneNumber: phoneNumber })
-        console.log(user)
-        // if (user && user.password.toString() == password.toString()) {
-        //     return user;
-        // }
         if (user) {
             const result = bcrypt.compareSync(password, user.password);
             return result ? user : false;
@@ -16,16 +12,12 @@ const login = async (phoneNumber, password) => {
     } catch (error) {
         console.log('Login error' + error)
         return false;
-
     }
 }
 //http://localhost:3000/api/user/register
 const register = async (phoneNumber, password, name, email, address, gender, dob, avatar, role, createAt) => {
     try {
-        //check email toon tại hay chua
-        //selecct * form users where email = email;
         const user = await UserModel.findOne({ phoneNumber: phoneNumber })
-        console.log("phoneNumber:" + phoneNumber);
         if (user) {
             return false;
         } else {
@@ -35,15 +27,13 @@ const register = async (phoneNumber, password, name, email, address, gender, dob
             const u = new UserModel(newUser);
             await u.save();
             return true;
-
         }
     } catch (error) {
         console.log("Register error" + error)
         return false;
-
     }
 }
-const deleteUserByphoneNumber = async (phoneNumber) => {
+const deleteByPhoneNumber = async (phoneNumber) => {
     try {
         const user = await UserModel.findOne({ phoneNumber: phoneNumber })
         console.log(user)
@@ -86,20 +76,10 @@ const updateUser = async (phoneNumber, password, name, email, address, gender, d
 const search = async (phoneNumber) => {
     try {
         console.log("phoneNumber",phoneNumber)
-        // return await myProductModel.find({
-            
-        //     // $and: [
-        //     //     // { phoneNumber: { $regex: phoneNumber, $options: 'i' } },
-        //     //     { $phoneNumber: { $search: "\"phoneNumber\"  " } }
-        //     // ]
-        // }).sort({});
-
-        return await myProductModel.find(
-            // { phoneNumber: { $regex: phoneNumber, $options: 'i' } },
-            { $phoneNumber: { $search: phoneNumber } }
-
+        return await UserModel.findOne(
+            { phoneNumber: phoneNumber }
         )
-       
+
     } catch (error) {
         return false;
     }
@@ -114,7 +94,8 @@ const getAllUser = async (page, size) => {
         throw error;
     }
 }
+
 module.exports = {
-    login, register, deleteUserByphoneNumber,
+    login, register, deleteByPhoneNumber,
     updateUser, getAllUser, search,
 };
