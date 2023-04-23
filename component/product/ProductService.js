@@ -140,7 +140,6 @@ const getProduct = async (id) => {
       console.log('get product error: ',error)
       throw error
   }
-  return null;
 }
 
 const search = async (keyword) => {

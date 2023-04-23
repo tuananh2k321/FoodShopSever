@@ -46,6 +46,20 @@ router.get('/fish', async function(req, res, next) {
     }  
 })
 
+// http://localhost:3000/product/api/:id
+// lấy ra 1 product
+router.get('/:id', async function (req, res, next) { 
+
+    try {
+        const {id} = req.params
+        const _id = id.toString();
+        const product = await productController.getProduct(_id);
+        res.status(200).json({products: product, result: true});
+    } catch (error) {
+        res.status(400).json({result: false});
+    }
+})
+
 // http://localhost:3000/product/api/vegetable
 // lấy ra tất cả sản phẩm vegetable
 router.get('/vegetable', async function(req, res, next) {
