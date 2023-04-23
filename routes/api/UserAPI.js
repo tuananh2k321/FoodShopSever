@@ -3,9 +3,13 @@ var router = express.Router();
 const jwt = require('jsonwebtoken');
 const userController = require('../../component/user/UserController')
 const { validationRegister } = require('../../MiddleWare/Validation')
-const textflow = require("textflow.js")
-textflow.useKey("WHLTtWlbpEJkzXEUjNmZJGPgj4x8OxLfynndaKz7NDA6Yly04wUH96IbOEUoUmnm")
 
+require('dotenv').config();
+console.log('Your environment variable TWILIO_ACCOUNT_SID has the value: ', process.env.TWILIO_ACCOUNT_SID);
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const verifySid = process.env.TWILIO_VERIFY_ID;
+const client = require("twilio")(accountSid, authToken);
 //http://localhost:3000/user/api/login
 router.post('/login', async (req, res, next) => {
     try {
@@ -36,42 +40,61 @@ router.post('/register', [validationRegister], async (req, res, next) => {
         const { phoneNumber, password, name, email, address, gender, dob, avatar, role, createAt, code } = req.body;
 
 
-        const user = await userController.register(phoneNumber, password, name, email, address, gender, dob, avatar, role, createAt);
-        if (user) {
-            return res.status(200).json({ result: true, user: user, message: "Register Success" });
-        }
-        return res.status(400).json({ result: false, user: null, message: "Register Failed" });
-
-
-        // let result =await textflow.verifyCode(phoneNumber, code)
-        // if (!result.valid) {
-        //     return res.status(400).json({ result: false, user: null, message: "Register Failed" });
-        // }else{
-        //     const user = await userController.register(phoneNumber, password, name);
-        //     if (user) {
-        //         return res.status(200).json({ result: true, user: user, message: "Register Success" });
-        //     }
-        //     return res.status(400).json({ result: false, user: null, message: "Register Failed" });
+        // const user = await userController.register(phoneNumber, password, name, email, address, gender, dob, avatar, role, createAt);
+        // if (user) {
+        //     return res.status(200).json({ result: true, user: user, message: "Register Success" });
         // }
+        // return res.status(400).json({ result: false, user: null, message: "Register Failed" });
+
+
+        let result =await textflow.verifyCode(phoneNumber, code)
+        if (!result.valid) {
+            return res.status(400).json({ result: false, user: null, message: "Register Failed" });
+        }else{
+            const user = await userController.register(phoneNumber, password, name, email, address, gender, dob, avatar, role, createAt);
+            if (user) {
+                return res.status(200).json({ result: true, user: user, message: "Register Success" });
+            }
+            return res.status(400).json({ result: false, user: null, message: "Register Failed" });
+        }
 
     } catch (error) {
         return res.status(500).json({ result: false, user: null })
     }
 })
-//http://localhost:3000/user/api/verify-phone
-router.post('/verify-phone', [], async (req, res, next) => {
-    try {
-        const { phoneNumber } = req.body;
-        let result = await textflow.sendVerificationSMS(phoneNumber);
-        console.log("result", result)
-        if (result.ok) {
-            return res.status(200).json({ result: true, message: "verify Success" });
-        }
-        return res.status(400).json({ result: false, user: null, message: "verify Failed" });
-    } catch (error) {
-        return res.status(500).json({ result: false, user: null })
-    }
-})
+
+//http://localhost:3000/user/api/sendOTP
+router.post('/sendOTP', (req, res) => {
+    const phoneNumber = req.body.phoneNumber;
+    client.verify.v2
+      .services(verifySid)
+      .verifications.create({ to: phoneNumber, channel: 'sms' })
+      .then((verification) => {
+        console.log(verification.status);
+        //res.status(200).send({ status: verification.status ,result:true});
+        res.status(200).json({ status: verification.status ,result:true});
+
+      })
+      .catch((error) => {
+        res.status(500).send({ error: error.message });
+      });
+  });
+  
+//http://localhost:3000/user/api/verifyOTP
+router.post('/verifyOTP', (req, res) => {
+    const phoneNumber = req.body.phoneNumber;
+    const otpCode = req.body.otpCode;
+    client.verify.v2
+      .services(verifySid)
+      .verificationChecks.create({ to: phoneNumber, code: otpCode })
+      .then((verification_check) => {
+        console.log(verification_check.status);
+        res.status(200).send({ status: verification_check.status,result :true });
+      })
+      .catch((error) => {
+        res.status(500).send({ error: error.message });
+      });
+  });
 //http://localhost:3000/user/api/update
 router.put('/update', async (req, res, next) => {
 

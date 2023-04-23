@@ -9,13 +9,22 @@ var indexRouter = require('./routes/index');
 // API
 var productAPIRouter = require('./routes/api/ProductAPI')
 var userAPIRouter = require('./routes/api/UserAPI')
+var categoryAPIRouter = require('./routes/api/CategoryAPI')
+
 
 // CPANEL
 var productCpanelRouter = require('./routes/cpanel/ProductCpanel')
 var userCpanelRouter = require('./routes/cpanel/UserCpanel')
+var categoryCpanelRouter = require('./routes/cpanel/CategoryCpanel')
+
 
 var app = express();
 
+
+const port = process.env.PORT || 3001;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
@@ -47,12 +56,19 @@ app.use('/product/api', productAPIRouter)
 // http://localhost:3000/user/api
 app.use('/user/api', userAPIRouter)
 
+// http://localhost:3000/category/api
+app.use('/category/api', categoryAPIRouter)
+
 // CPANEL
 // http://localhost:3000/product/cpanel
 app.use('/product/cpanel', productCpanelRouter)
 
 // http://localhost:3000/user/cpanel
 app.use('/user/cpanel', userCpanelRouter)
+
+// http://localhost:3000/category/cpanel
+app.use('/category/cpanel', categoryCpanelRouter)
+
 
 
 // catch 404 and forward to error handler

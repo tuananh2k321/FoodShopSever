@@ -62,7 +62,7 @@ const updateUser = async (phoneNumber, password, name, email, address, gender, d
             user.avatar = avatar ? avatar : user.avatar;
             user.role = role ? role : user.role;
             await user.save();
-            console.log("USER:" + user);
+            console.log("INFO USER:" + user);
 
             return true;
         } else {
