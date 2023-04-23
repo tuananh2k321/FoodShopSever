@@ -35,29 +35,16 @@ router.post('/login', async (req, res, next) => {
     }
 })
 //http://localhost:3000/user/api/register
-router.post('/register', [validationRegister], async (req, res, next) => {
+router.post('/register', [], async (req, res, next) => {
     try {
-        const { phoneNumber, password, name, email, address, gender, dob, avatar, role, createAt, code } = req.body;
-
-
-        // const user = await userController.register(phoneNumber, password, name, email, address, gender, dob, avatar, role, createAt);
-        // if (user) {
-        //     return res.status(200).json({ result: true, user: user, message: "Register Success" });
-        // }
-        // return res.status(400).json({ result: false, user: null, message: "Register Failed" });
-
-
-        let result =await textflow.verifyCode(phoneNumber, code)
-        if (!result.valid) {
-            return res.status(400).json({ result: false, user: null, message: "Register Failed" });
-        }else{
-            const user = await userController.register(phoneNumber, password, name, email, address, gender, dob, avatar, role, createAt);
-            if (user) {
-                return res.status(200).json({ result: true, user: user, message: "Register Success" });
-            }
-            return res.status(400).json({ result: false, user: null, message: "Register Failed" });
+        const { phoneNumber, password, name, email, address, gender, dob, avatar, role, createAt } = req.body;
+        console.log(phoneNumber, password, name, email, address, gender, dob, avatar, role, createAt)
+        const user = await userController.register(phoneNumber, password, name, email, address, gender, dob, avatar, role, createAt);
+       console.log(user)
+        if (user) {
+            return res.status(200).json({ result: true, user: user, message: "Register Success" });
         }
-
+        return res.status(400).json({ result: false, user: null, message: "Register Failed" });
     } catch (error) {
         return res.status(500).json({ result: false, user: null })
     }

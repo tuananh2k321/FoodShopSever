@@ -17,16 +17,21 @@ const login = async (phoneNumber, password) => {
 //http://localhost:3000/api/user/register
 const register = async (phoneNumber, password, name, email, address, gender, dob, avatar, role, createAt) => {
     try {
+        console.log("phoneNumbeaaaaaaaaaaaar", phoneNumber)
+        console.log("QQQQ", password, name, email, address, gender, dob, avatar, role, createAt)
+
+
         const user = await UserModel.findOne({ phoneNumber: phoneNumber })
-        if (user) {
-            return false;
-        } else {
+        console.log("userrrr", user)
+        if (user == null) {
             const salt = bcrypt.genSaltSync(10);
             const hash = bcrypt.hashSync(password, salt);
             const newUser = { phoneNumber, password: hash, name, email, address, gender, dob, avatar, role, createAt };
             const u = new UserModel(newUser);
             await u.save();
             return true;
+        } else {
+            return false;
         }
     } catch (error) {
         console.log("Register error" + error)
@@ -75,7 +80,7 @@ const updateUser = async (phoneNumber, password, name, email, address, gender, d
 }
 const search = async (phoneNumber) => {
     try {
-        console.log("phoneNumber",phoneNumber)
+        console.log("phoneNumber", phoneNumber)
         return await UserModel.findOne(
             { phoneNumber: phoneNumber }
         )
