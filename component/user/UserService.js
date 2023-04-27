@@ -47,7 +47,7 @@ const deleteByPhoneNumber = async (phoneNumber) => {
         }
         return true;
     } catch (error) {
-        console.log("Delete User  error" + error);
+        console.log("Delete User  error", error);
         return false;
 
     }
@@ -67,14 +67,14 @@ const updateUser = async (phoneNumber, password, name, email, address, gender, d
             user.avatar = avatar ? avatar : user.avatar;
             user.role = role ? role : user.role;
             await user.save();
-            console.log("INFO USER:" + user);
+            console.log("INFO USER:", user);
 
             return true;
         } else {
             return false;
         }
     } catch (error) {
-        console.log("Update User  error" + error)
+        console.log("Update User  error", error)
         return false;
     }
 }
@@ -95,12 +95,33 @@ const getAllUser = async (page, size) => {
         return await UserModel.find();
         //  data.splice(index, 1);
     } catch (error) {
-        console.log("List user Got an error: " + error);
+        console.log("List user Got an error: ", error);
+        throw error;
+    }
+}
+const changePassword = async (email, oldPassword, newPassword) => {
+    try {
+        const user = await UserModel.findOne({ email: email })
+        if (user) {
+            console.log("INFO USER:", user);
+            const isPasswordValid = await bcrypt.compare(oldPassword,user.password)
+            if(isPasswordValid){
+                user.password = newPassword
+                await user.save();
+                return true;
+            }else{
+                return false
+            }
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.log("Change Password got an error: ", error);
         throw error;
     }
 }
 
 module.exports = {
     login, register, deleteByPhoneNumber,
-    updateUser, getAllUser, search,
+    updateUser, getAllUser, search,changePassword
 };

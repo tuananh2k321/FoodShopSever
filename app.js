@@ -10,6 +10,8 @@ var indexRouter = require('./routes/index');
 var productAPIRouter = require('./routes/api/ProductAPI')
 var userAPIRouter = require('./routes/api/UserAPI')
 var categoryAPIRouter = require('./routes/api/CategoryAPI')
+var cartAPIRouter = require('./routes/api/CartAPI')
+var myProductAPIRouter = require('./routes/api/MyProductAPI')
 
 
 // CPANEL
@@ -21,10 +23,10 @@ var categoryCpanelRouter = require('./routes/cpanel/CategoryCpanel')
 var app = express();
 
 
-const port = process.env.PORT || 3001;
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+// const port = process.env.PORT || 3001;
+// app.listen(port, () => {
+//   console.log(`Server is running on port ${port}`);
+// });
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
@@ -58,6 +60,13 @@ app.use('/user/api', userAPIRouter)
 
 // http://localhost:3000/category/api
 app.use('/category/api', categoryAPIRouter)
+
+// http://localhost:3000/cart/api
+app.use('/cart/api', cartAPIRouter)
+
+// http://localhost:3000/myProduct/api
+app.use('/myProduct/api', myProductAPIRouter)
+
 
 // CPANEL
 // http://localhost:3000/product/cpanel

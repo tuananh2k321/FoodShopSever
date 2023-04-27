@@ -8,4 +8,4 @@ const categorySchema = new Schema({
 });
 
 module.exports = mongoose.models.category || mongoose.model('category', categorySchema);
-//trong đây là số ít bên mông là số nhiều
+//trong đây là số ít bên mongodb là số nhiều
