@@ -59,7 +59,8 @@ router.post('/login', async (req, res, next) => {
 //http://localhost:3000/user/api/register
 router.post('/register', [], async (req, res, next) => {
     try {
-        const { phoneNumber, password, name, email, address, gender, dob, avatar, role, createAt } = req.body;
+        const { phoneNumber, password, name, email, address,
+            gender, dob, avatar, role, createAt } = req.body;
         console.log(phoneNumber, password, name, email, address, gender, dob, avatar, role, createAt)
         const user = await userController.register(phoneNumber, password, name, email, address, gender, dob, avatar, role, createAt);
         console.log(user)
@@ -213,14 +214,25 @@ router.post('/change-password', [], async (req, res, next) => {
 //http://localhost:3000/user/api/send-verification-code
 router.post('/send-verification-code', async (req, res) => {
     try {
-        const { email,  verifyCode} = req.body;
+        const { email } = req.body;
         let subject = "Food Shop Account Verification";
-
-        const result = await userController.sendVerifyCode(email, subject,verifyCode);
-        return res.status(200).json({ message:"Send Success",result: result });
+        const verifyCode = Math.floor(Math.random() * 1000000);
+        const result = await userController.sendVerifyCode(email, subject, verifyCode);
+        return res.status(200).json({ message: "Send Success", result: result });
     } catch (error) {
         console.log("MAIL:" + error)//API
-        return res.status(500).json({ result: false, massage: "Can't get list user" })//app
+        return res.status(500).json({ result: false, massage: "ERROR Send" })//app
+    }
+});
+//http://localhost:3000/user/api/verify-email
+router.post('/verify-email', async (req, res) => {
+    try {
+        const { email, verifyCode } = req.body;
+        const result = await userController.verifyCode(email, verifyCode);
+        return res.status(200).json({ message: "Verify Success", result: result });
+    } catch (error) {
+        console.log("MAIL:" + error)//API
+        return res.status(500).json({ result: false, massage: "ERROR Verify" })//app
     }
 });
 

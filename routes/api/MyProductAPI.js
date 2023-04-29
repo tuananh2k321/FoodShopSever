@@ -10,7 +10,7 @@ router.get('/getAllProduct', async (req, res, next) => {
         const products = await myProductController.getAllProduct()
         console.log(products)
         if (products) {
-            return res.status(200).json({ message: "Get All Success" , result: true, products: products,});
+            return res.status(200).json({ message: "Get All Success", result: true, products: products, });
         } else {
             return res.status(400).json({ result: false, products: null, message: "Get All Failed" });
         }
@@ -62,13 +62,13 @@ router.delete('/delete', async (req, res, next) => {
 })
 
 //http://localhost:3000/myProduct/api/update-by-id
-router.put('/update-by-id',[upLoadImage.single('image')], async (req, res, next) => {
+router.put('/update-by-id', [upLoadImage.single('image')], async (req, res, next) => {
     try {
         const { _id } = req.query;
         const { name, price, category, description, image, stock, mfg, exp } = req.body;
 
         const product = await myProductController
-            .updateProductById(_id,name, price, category, description, image, stock, mfg, exp);
+            .updateProductById(_id, name, price, category, description, image, stock, mfg, exp);
         console.log(product)
         if (product) {
             return res.status(200).json({ result: true, product: product, massage: "Update success" });
@@ -82,17 +82,13 @@ router.put('/update-by-id',[upLoadImage.single('image')], async (req, res, next)
 //http://localhost:3000/myProduct/api/search
 router.get('/search', async (req, res, next) => {
     try {
-
         let { name } = req.query;
-
         const products = await myProductController.searchProduct(name);
         console.log("products", products)
         if (products) {
-            return res.status(200).json({ result: true, product: products, massage: "Search Success" })
-
+            return res.status(200).json({ massage: "Search Success", result: true, product: products, })
         } else {
-            return res.status(400).json({ result: false, product: null, massage: "Search Failed" })
-
+            return res.status(400).json({ massage: "Search Failed", result: false, product: null, })
         }
     } catch (error) {
         return res.status(500).json({ result: false, product: null })
