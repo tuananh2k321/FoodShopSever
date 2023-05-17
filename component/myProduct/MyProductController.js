@@ -19,7 +19,7 @@ const addNew = async (name, price, category, description, image, stock, mfg, exp
 }
 const deleteByName = async (name) => {
     try {
-return await myProductService.deleteByName(name)
+        return await myProductService.deleteByName(name)
     } catch (error) {
         throw error
     }
@@ -32,15 +32,23 @@ const searchProduct = async (name) => {
         return false;
     }
 }
-const updateProductById = async (_id,name, price, category, description, image, stock, mfg, exp)=>{
+const updateProductById = async (_id, name, price, category, description, image, stock, mfg, exp) => {
     try {
-        return await myProductService.updateProductById(_id,name, price, category, description, image, stock, mfg, exp);
+        return await myProductService.updateProductById(_id, name, price, category, description, image, stock, mfg, exp);
 
     } catch (error) {
         return false;
     }
 }
+const getById = async (_id) => {
+    try {
+        return await myProductService.getById(_id);
+    } catch (error) {
+        return false;
+
+    }
+}
 module.exports = {
     getAllProduct, addNew, deleteByName,
-    searchProduct,updateProductById
+    searchProduct, updateProductById,getById
 };

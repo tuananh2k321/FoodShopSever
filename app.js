@@ -12,6 +12,8 @@ var userAPIRouter = require('./routes/api/UserAPI')
 var categoryAPIRouter = require('./routes/api/CategoryAPI')
 var cartAPIRouter = require('./routes/api/CartAPI')
 var myProductAPIRouter = require('./routes/api/MyProductAPI')
+var paymenttAPIRouter = require('./routes/api/PaymentAPI')
+
 
 
 // CPANEL
@@ -66,6 +68,9 @@ app.use('/cart/api', cartAPIRouter)
 
 // http://localhost:3000/myProduct/api
 app.use('/myProduct/api', myProductAPIRouter)
+
+// http://localhost:3000/myProduct/api
+app.use('/payment/api', paymenttAPIRouter)
 
 
 // CPANEL

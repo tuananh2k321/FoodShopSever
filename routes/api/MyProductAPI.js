@@ -19,7 +19,22 @@ router.get('/getAllProduct', async (req, res, next) => {
         return res.status(500).json({ result: false, message: 'Error System' })
     }
 })
-
+//http://localhost:3000/myProduct/api/get-by-id
+router.get('/get-by-id', async (req, res, next) => {
+    try {
+        const {_id}= req.body;
+        const product = await myProductController.getById(_id)
+        console.log(product)
+        if (product) {
+            return res.status(200).json({ message: "Get product Success", result: true, product: product, });
+        } else {
+            return res.status(400).json({ result: false, product: null, message: "Get product Failed" });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ result: false, message: 'Error System' })
+    }
+})
 //http://localhost:3000/myProduct/api/add-new
 router.post('/add-new', [upLoadImage.single('image')], async (req, res, next) => {
     try {

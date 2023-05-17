@@ -29,7 +29,7 @@ router.post('/add-to-cart', async (req, res, next) => {
         console.log("userId, productId, quantity",userId, productId, quantity)
 
         const carts = await cartController.addToCart(userId, productId, quantity)
-        console.log(carts)
+        console.log("carts",carts)
         if (carts) {
             return res.status(200)
                 .json({ message: "Add to cart Success", result: true, carts: carts, });
@@ -38,7 +38,7 @@ router.post('/add-to-cart', async (req, res, next) => {
                 .json({ result: false, carts: null, message: "Add to cartFailed" });
         }
     } catch (error) {
-        console.log(error);
+      
         return res.status(500).json({ result: false, message: 'Error System' })
     }
 })

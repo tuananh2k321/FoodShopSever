@@ -28,14 +28,7 @@ const userSchema = new Schema({
   role: { type: Number, default: 1 },
   isVerified: { type: Boolean , default: false},
   verificationCode: { type: String },
-  cart: {
-    type:ObjectId,ref:'cart'
-  }
-    
-  
-
-
+  cart: { type: ObjectId, ref: 'cart' }
 });
 
 module.exports = mongoose.models.user || mongoose.model('user', userSchema);
-//trong đây là số ít bên mông là số nhiều 

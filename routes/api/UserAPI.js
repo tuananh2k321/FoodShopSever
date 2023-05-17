@@ -216,7 +216,7 @@ router.post('/send-verification-code', async (req, res) => {
     try {
         const { email } = req.body;
         let subject = "Food Shop Account Verification";
-        const verifyCode = Math.floor(Math.random() * 1000000);
+        const verifyCode = Math.floor((100000 + Math.random()) * 900000);
         const result = await userController.sendVerifyCode(email, subject, verifyCode);
         return res.status(200).json({ message: "Send Success", result: result });
     } catch (error) {
@@ -235,5 +235,20 @@ router.post('/verify-email', async (req, res) => {
         return res.status(500).json({ result: false, massage: "ERROR Verify" })//app
     }
 });
+//http:..localhost:3000/user/api/pay
+router.post('/pay', async (req, res) => {
+    try {
+        const { total, method, address, infoUser, transportFee, discountCode, tax } = req.body;
+        console.log(total, method, address, infoUser, transportFee, discountCode, tax)
+        const info = await userController.pay(total, method, address, infoUser, transportFee, discountCode, tax)
+        if (info) {
+            return res.status(200).json({ message: "Pay Success", result: result });
+        } else {
+            return res.status(200).json({ message: "Pay Failed", result: null });
+        }
+    } catch (error) {
 
+        return res.status(500).json({ result: false, massage: "ERROR Pay" })//app
+    }
+});
 module.exports = router;

@@ -8,25 +8,20 @@ const cartItemSchema = new Schema({
         ref: 'myProduct',
         required: true
     },
-
     quantity: { type: Number, default: "1" },
-
-    //category: { type: Schema.Types.ObjectId, ref: 'category', require: true, },
 
 });
 
 const cartSchema = new Schema({
     id: {
         type: ObjectId,
-        required: true
     },
     userId: {
         type: ObjectId,
         ref: 'user',
-        required: true
+        required: true,
     },
     items: [cartItemSchema]
 });
 
 module.exports = mongoose.models.cart || mongoose.model('cart', cartSchema);
-//trong đây là số ít bên mongodb là số nhiều
