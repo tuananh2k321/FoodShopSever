@@ -103,6 +103,7 @@ router.post('/verifyOTP', (req, res) => {
             res.status(500).send({ error: error.message });
         });
 });
+
 //http://localhost:3000/user/api/update
 router.put('/update', async (req, res, next) => {
 
@@ -215,8 +216,10 @@ router.post('/change-password', [], async (req, res, next) => {
 router.post('/send-verification-code', async (req, res) => {
     try {
         const { email } = req.body;
-        let subject = "Food Shop Account Verification";
-        const verifyCode = Math.floor((100000 + Math.random()) * 900000);
+        let subject = "Management Finance Account Verification";
+        const verifyCode = Math.floor(Math.random() * 90000) + 10000;
+        console.log("verifyCode",verifyCode)
+     
         const result = await userController.sendVerifyCode(email, subject, verifyCode);
         return res.status(200).json({ message: "Send Success", result: result });
     } catch (error) {

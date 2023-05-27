@@ -116,7 +116,9 @@ const changePassword = async (email, oldPassword, newPassword) => {
             console.log("INFO USER:", user);
             const isPasswordValid = await bcrypt.compare(oldPassword, user.password)
             if (isPasswordValid) {
-                user.password = newPassword
+                const salt = bcrypt.genSaltSync(10);
+                const hash = bcrypt.hashSync(newPassword, salt);
+                user.password = hash
                 await user.save();
                 return true;
             } else {
